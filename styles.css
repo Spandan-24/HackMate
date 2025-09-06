@@ -136,6 +136,16 @@ button:active, .tab-btn:active { transform: translateY(0) scale(0.98); }
 .progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(168,85,247,.8), rgba(99,102,241,.9), rgba(34,211,238,.9)); }
 @keyframes load4s { from { width: 0%; } to { width: 100%; } }
 
+/* Home loader overlay (removed) */
+
+/* Background particle field */
+.particle-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.particle { position: absolute; left: var(--l); top: var(--t); width: 6px; height: 6px; border-radius: 9999px; background: radial-gradient(#e2e8f0, transparent 70%); opacity: 0.5; animation: driftParticle var(--dur) ease-in-out infinite alternate; animation-delay: var(--delay); filter: blur(0.5px); }
+@keyframes driftParticle { from { transform: translate(0,0) scale(1); } to { transform: translate(var(--dx), var(--dy)) scale(1.3); } }
+
+/* Perf mode: disable particles */
+:root.perf-low .particle-field { display: none !important; }
+
 /* ---------- Performance mode (reduced effects) ---------- */
 /* When the root element has class 'perf-low', turn off heavy paint/animation work */
 :root.perf-low .pointer-events-none.fixed.inset-0 > div { display: none !important; }
