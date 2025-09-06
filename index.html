@@ -42,6 +42,7 @@
       </nav>
       <div class="flex items-center gap-3">
         <span id="apiStatusHeader" class="hidden rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-slate-300"></span>
+        <button id="perfToggle" title="Toggle performance mode" class="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-slate-300 hover:bg-white/10">Perf</button>
         <a href="login.html" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500">Log in</a>
         <a href="createprofile.html" id="newProfileBtn" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500">Create Profile</a>
       </div>
@@ -51,7 +52,9 @@
   <main class="relative z-10 mx-auto max-w-7xl px-6 py-10">
     <section id="home" class="mb-12">
       <div class="text-center">
-  <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight glow-text glow-pulse shine">Find your perfect hackathon match</h2>
+  <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight glow-text glow-pulse">
+            <span id="typewriter" class="align-middle" aria-live="polite">Find your perfect hackathon partner.</span><span class="type-caret" aria-hidden="true"></span>
+          </h2>
         <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Search teammates or teams based on skills, connect instantly, and collaborate.</p>
         <div class="mt-6 flex items-center justify-center">
           <a href="#search" class="rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 sheen px-4 py-2 text-sm font-semibold text-white shadow-[0_0_40px_-12px_rgba(34,211,238,0.6)] hover:opacity-95">Explore Profiles</a>
@@ -420,6 +423,19 @@
         header.prepend(span);
         header.appendChild(btn);
       } catch {}
+    })();
+    // Performance toggle
+    (function(){
+      const btn = document.getElementById('perfToggle');
+      if (!btn) return;
+      function syncLabel(){ btn.textContent = document.documentElement.classList.contains('perf-low') ? 'Perf: Low' : 'Perf'; }
+      btn.addEventListener('click', () => {
+        const root = document.documentElement;
+        const low = root.classList.toggle('perf-low');
+        try { localStorage.setItem('hm_perf_low', low ? '1' : '0'); } catch {}
+        syncLabel();
+      });
+      syncLabel();
     })();
   </script>
 </body>

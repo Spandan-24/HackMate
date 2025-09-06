@@ -123,6 +123,10 @@ button:active, .tab-btn:active { transform: translateY(0) scale(0.98); }
 .shine { background: linear-gradient(90deg, #e2e8f0, #a855f7, #22d3ee, #e2e8f0); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shineText 6s linear infinite; }
 @keyframes shineText { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 
+/* Typewriter caret */
+.type-caret { display:inline-block; width: 1px; height: 1.2em; margin-left: 4px; background: #e2e8f0; animation: caretBlink 1s steps(1, end) infinite; vertical-align: middle; }
+@keyframes caretBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
 /* ---------- Login overlay (4s) ---------- */
 #loginOverlay { display: none; }
 #loginOverlay.flex { display: flex; }
@@ -131,3 +135,15 @@ button:active, .tab-btn:active { transform: translateY(0) scale(0.98); }
 .progress { width: 240px; height: 8px; border-radius: 9999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
 .progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(168,85,247,.8), rgba(99,102,241,.9), rgba(34,211,238,.9)); }
 @keyframes load4s { from { width: 0%; } to { width: 100%; } }
+
+/* ---------- Performance mode (reduced effects) ---------- */
+/* When the root element has class 'perf-low', turn off heavy paint/animation work */
+:root.perf-low .pointer-events-none.fixed.inset-0 > div { display: none !important; }
+:root.perf-low #home .text-center::before { content: none !important; }
+:root.perf-low .glow-pulse, :root.perf-low .sheen, :root.perf-low .shine { animation: none !important; }
+:root.perf-low .type-caret { animation: none !important; opacity: 1; }
+:root.perf-low .card { transition: none !important; }
+:root.perf-low .card:hover { transform: none !important; box-shadow: none !important; }
+:root.perf-low .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+:root.perf-low header { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+:root.perf-low #chatModal > div:first-child, :root.perf-low #chatModal > .relative { transition: none !important; }

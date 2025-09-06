@@ -25,30 +25,28 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/ideas', ideaRoutes);
 
 // Health with DB status
-app.get('/api/health', (req, res) => {
+const healthHandler = (req, res) => {
   const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
   const db = states[mongoose.connection.readyState] || 'unknown';
   res.json({ status: 'ok', db });
-});
+};
+app.get('/api/health', healthHandler);
+// Common misspelling fallback
+app.get('/api/helth', healthHandler);
 
 // DB connect and server start
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hackmate';
 
-// Start HTTP server first so health endpoint works even if DB is down
+// Start the HTTP server first so health checks work even if DB is down
 app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
 
-// Connect to MongoDB with simple retry logic (non-fatal on failure)
-const connectWithRetry = (delayMs = 5000) => {
-  mongoose
-    .connect(MONGO_URI)
-    .then(() => {
-      console.log('MongoDB connected');
-    })
-    .catch((err) => {
-      console.error(`MongoDB connection error: ${err.message}. Retrying in ${Math.round(delayMs / 1000)}s...`);
-      setTimeout(() => connectWithRetry(Math.min(delayMs * 2, 30000)), delayMs);
-    });
-};
-
-connectWithRetry();
+// Connect to MongoDB (non-fatal if it fails; health route will reflect status)
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log('MongoDB connected');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+  });

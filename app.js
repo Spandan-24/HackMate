@@ -174,20 +174,39 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
 function init() {
+  // Perf: simple runtime signal for slow devices; can be overridden by localStorage
+  try {
+    const userPref = localStorage.getItem('hm_perf_low');
+    const low = userPref === '1' || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+    if (low) document.documentElement.classList.add('perf-low');
+  } catch {}
+
   bindTabs();
   bindFilters();
   bindNavLinks();
   bindSearchPanel();
   bindTeamFinder();
-  renderSkills();
+  // Defer non-critical work to next frames to keep first paint smooth
+  requestIdleCallbackSafe(() => renderSkills());
   setupChat();
+  // Load data without blocking render
   loadRemoteData().finally(() => {
-    applyFilters();
-    renderSuggestions();
-    setupScrollReveal();
+    requestAnimationFrame(() => {
+      applyFilters();
+      renderSuggestions();
+      setupScrollReveal();
+    });
   });
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Start hero typewriter after first frame
+  requestAnimationFrame(() => startTypewriter());
+}
+
+function requestIdleCallbackSafe(cb) {
+  if ('requestIdleCallback' in window) return window.requestIdleCallback(cb, { timeout: 300 });
+  return setTimeout(cb, 0);
 }
 
 function bindTabs() {
@@ -366,10 +385,12 @@ function hideSearchPanel() {
 function renderSkills() {
   const list = $("#skillsList");
   const term = $("#skillSearch").value.toLowerCase();
-  list.innerHTML = "";
+  // Perf: reuse and build in a fragment to avoid layout thrash
+  const frag = document.createDocumentFragment();
+  list.textContent = "";
   sampleSkills
     .filter((s) => s.toLowerCase().includes(term))
-    .slice(0, 50)
+    .slice(0, 40) // cap to 40 to keep DOM light
     .forEach((skill) => {
       const item = document.createElement("div");
       item.className = "skill-item";
@@ -383,8 +404,9 @@ function renderSkills() {
       `;
       item.querySelector('.skill-check').addEventListener("click", (e) => { e.stopPropagation(); toggleSkill(skill); });
       item.addEventListener("click", () => toggleSkill(skill));
-      list.appendChild(item);
+      frag.appendChild(item);
     });
+  list.appendChild(frag);
   renderSelectedChips();
 }
 
@@ -421,7 +443,8 @@ function renderSelectedChips() {
 function applyFilters() {
   const resultsGrid = $("#resultsGrid");
   const emptyState = $("#emptyState");
-  resultsGrid.innerHTML = "";
+  // Perf: avoid large innerHTML churn; reuse grid element content via textContent reset
+  resultsGrid.textContent = "";
 
   const skills = [...state.selectedSkills];
   const hasSkills = (arr) => skills.every((s) => arr.includes(s));
@@ -449,7 +472,7 @@ function applyFilters() {
 function renderSuggestions() {
   const grid = document.getElementById('suggestionsGrid');
   if (!grid) return;
-  grid.innerHTML = '';
+  grid.textContent = '';
   (remoteProfiles && remoteProfiles.length ? remoteProfiles : sampleProfiles).slice(0, 3).forEach((p) => grid.appendChild(renderProfileCard(p)));
 }
 
@@ -617,7 +640,9 @@ function setupScrollReveal() {
         t.classList.add('in-view');
         // Stagger children if it's a grid of cards
         if (t.id === 'suggestionsGrid' || t.id === 'resultsGrid') {
-          [...t.children].forEach((child, i) => {
+          // Perf: limit staggering to first 12 children
+          const kids = Array.prototype.slice.call(t.children, 0, 12);
+          kids.forEach((child, i) => {
             child.style.setProperty('--reveal-delay', `${Math.min(i * 60, 360)}ms`);
             child.classList.add('reveal', 'in-view');
           });
@@ -639,4 +664,47 @@ function staggerGridReveal(grid) {
     child.style.setProperty('--reveal-delay', `${Math.min(i * 60, 360)}ms`);
     child.classList.add('reveal', 'in-view');
   });
+}
+
+// ---------- Typewriter ----------
+function startTypewriter() {
+  const el = document.getElementById('typewriter');
+  if (!el) return;
+  const phrases = [
+    'Find your perfect hackathon partner.',
+    'Hack together. Build smarter. Win bigger.',
+    'Collaboration starts here.',
+    'From lone coder to winning team – with HackMate.'
+  ];
+  const perfLow = document.documentElement.classList.contains('perf-low');
+  const typeDelay = perfLow ? 18 : 28; // ms per char
+  const holdDelay = 1400; // pause on full line
+  const eraseDelay = perfLow ? 14 : 20;
+  let pi = 0, i = 0, dir = 1; // dir: 1 typing, -1 deleting
+
+  function step() {
+    const text = phrases[pi];
+    if (dir === 1) {
+      i++;
+      el.textContent = text.slice(0, i);
+      if (i === text.length) {
+        setTimeout(() => { dir = -1; step(); }, holdDelay);
+      } else {
+        setTimeout(step, typeDelay);
+      }
+    } else {
+      i--;
+      el.textContent = text.slice(0, Math.max(i, 0));
+      if (i <= 0) {
+        dir = 1; pi = (pi + 1) % phrases.length;
+        setTimeout(step, typeDelay);
+      } else {
+        setTimeout(step, eraseDelay);
+      }
+    }
+  }
+  // Initial seed
+  el.textContent = phrases[0];
+  i = phrases[0].length;
+  setTimeout(() => { dir = -1; step(); }, holdDelay);
 }
