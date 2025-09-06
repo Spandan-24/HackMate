@@ -45,9 +45,30 @@
         <button id="perfToggle" title="Toggle performance mode" class="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-slate-300 hover:bg-white/10">Perf</button>
         <a href="login.html" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500">Log in</a>
         <a href="createprofile.html" id="newProfileBtn" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500">Create Profile</a>
+        <button id="mobileMenuBtn" class="md:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-2 text-slate-200 hover:bg-white/10 focus:outline-none" aria-label="Open menu" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile menu panel -->
+  <div id="mobileMenu" class="md:hidden hidden border-b border-white/10 bg-slate-900/80 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-6 py-4">
+      <nav class="grid gap-2 text-sm">
+        <a href="#home" class="rounded-md px-3 py-2 hover:bg-white/5">Home</a>
+        <a href="#features" class="rounded-md px-3 py-2 hover:bg-white/5">Features</a>
+        <a href="#search" class="rounded-md px-3 py-2 hover:bg-white/5">Profiles</a>
+        <a href="#search" class="rounded-md px-3 py-2 hover:bg-white/5">Search</a>
+        <a href="#about" class="rounded-md px-3 py-2 hover:bg-white/5">About</a>
+        <a href="#team-finder" class="rounded-md px-3 py-2 hover:bg-white/5">Team Finder</a>
+      </nav>
+      <div id="mobileMenuActions" class="mt-3 grid grid-cols-2 gap-2">
+        <a id="mobileLoginLink" href="login.html" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-center text-sm text-white hover:bg-white/10">Log in</a>
+        <a href="createprofile.html" class="rounded-lg bg-white/10 px-4 py-2 text-center text-sm text-white hover:bg-white/15">Create Profile</a>
+      </div>
+    </div>
+  </div>
 
   <main class="relative z-10 mx-auto max-w-7xl px-6 py-10">
     <section id="home" class="mb-12">
@@ -403,6 +424,20 @@
         el.className = 'rounded-md border border-white/10 px-2 py-1 text-xs bg-rose-500/20 text-rose-200';
       });
     })();
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('mobileMenuBtn');
+      const panel = document.getElementById('mobileMenu');
+      if (!btn || !panel) return;
+      function closePanel(){ panel.classList.add('hidden'); btn.setAttribute('aria-expanded','false'); }
+      function openPanel(){ panel.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); }
+      btn.addEventListener('click', () => {
+        const open = !panel.classList.contains('hidden');
+        if (open) closePanel(); else openPanel();
+      });
+      // Close when a link is clicked
+      panel.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', closePanel));
+    })();
     // Auth-aware header: greet and allow logout if token exists
     (function(){
       try {
@@ -422,6 +457,18 @@
         btn.addEventListener('click', () => { localStorage.removeItem('hm_token'); localStorage.removeItem('hm_user'); location.reload(); });
         header.prepend(span);
         header.appendChild(btn);
+
+        // Also update mobile menu actions
+        const mobileLogin = document.getElementById('mobileLoginLink');
+        if (mobileLogin) mobileLogin.remove();
+        const mobileActions = document.getElementById('mobileMenuActions');
+        if (mobileActions) {
+          const logout = document.createElement('button');
+          logout.className = 'rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10';
+          logout.textContent = 'Log out';
+          logout.addEventListener('click', () => { localStorage.removeItem('hm_token'); localStorage.removeItem('hm_user'); location.reload(); });
+          mobileActions.appendChild(logout);
+        }
       } catch {}
     })();
     // Performance toggle
