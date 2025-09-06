@@ -35,13 +35,20 @@ app.get('/api/health', (req, res) => {
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hackmate';
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+// Start HTTP server first so health endpoint works even if DB is down
+app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
+
+// Connect to MongoDB with simple retry logic (non-fatal on failure)
+const connectWithRetry = (delayMs = 5000) => {
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+      console.log('MongoDB connected');
+    })
+    .catch((err) => {
+      console.error(`MongoDB connection error: ${err.message}. Retrying in ${Math.round(delayMs / 1000)}s...`);
+      setTimeout(() => connectWithRetry(Math.min(delayMs * 2, 30000)), delayMs);
+    });
+};
+
+connectWithRetry();
