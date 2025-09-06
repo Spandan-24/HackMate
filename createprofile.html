@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Profile • HackMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <script>window.API_BASE = 'http://localhost:4000';</script>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-48 -left-40 h-96 w-96 rounded-full bg-fuchsia-500/20 blur-3xl"></div>
+    <div class="absolute -bottom-48 -right-40 h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/40">
+    <div class="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
+      <a href="index.html#home" class="flex items-center gap-3">
+        <svg width="36" height="36" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" class="rounded-xl shadow-[0_0_40px_-10px_rgba(168,85,247,.7)]">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#a855f7"/>
+              <stop offset="60%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g)"/>
+          <text x="50%" y="54%" text-anchor="middle" font-size="28" font-weight="800" fill="#0b1020" font-family="Inter, system-ui">HM</text>
+        </svg>
+        <h1 class="text-xl font-extrabold tracking-tight">HackMate</h1>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-slate-300">
+        <a href="index.html#home" class="hover:text-white">Home</a>
+        <a href="index.html#search" class="hover:text-white">Profiles</a>
+        <a href="index.html#about" class="hover:text-white">About</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="login.html" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500">Log in</a>
+        <a href="createprofile.html" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500">Create Profile</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-7xl px-6 py-12">
+    <section class="reveal in-view">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur card">
+        <h3 class="text-xl font-bold">Create your profile</h3>
+        <p class="mt-2 text-slate-300">Tell teammates about yourself. You can edit this later.</p>
+        <form id="createForm" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4" onsubmit="return false;">
+          <input id="fullName" type="text" required placeholder="Full name" class="rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          <input id="email" type="email" required placeholder="Email" class="rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          <input id="password" type="password" required placeholder="Password" class="rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          <input id="org" type="text" placeholder="College / Organization" class="rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          <input id="location" type="text" placeholder="Location" class="rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          <div class="md:col-span-2">
+            <label class="block text-sm mb-1 text-slate-300">Skills</label>
+            <input id="skills" type="text" placeholder="e.g. React, Node.js, PostgreSQL" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+            <p class="mt-1 text-xs text-slate-400">Comma-separated list.</p>
+          </div>
+          <textarea id="bio" placeholder="Short bio / README" rows="5" class="md:col-span-2 rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm"></textarea>
+          <div class="md:col-span-2 flex items-center justify-end gap-3">
+            <button type="button" id="previewBtn" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10">Preview</button>
+            <button type="submit" id="saveBtn" class="rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white">Create Account</button>
+          </div>
+          <p id="saveError" class="md:col-span-2 hidden text-sm text-rose-300"></p>
+        </form>
+      </div>
+
+      <div id="preview" class="hidden mt-6 card">
+        <div class="card-body">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 id="pName" class="font-semibold">—</h4>
+              <p id="pMeta" class="text-xs text-slate-400">—</p>
+            </div>
+            <span class="badge">Preview</span>
+          </div>
+          <p id="pBio" class="mt-3 text-sm text-slate-300">—</p>
+          <div id="pSkills" class="mt-3 flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="relative z-10 mt-16 border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+      <div>
+        <div class="flex items-center gap-2">
+          <div class="h-7 w-7 rounded-md bg-gradient-to-br from-fuchsia-500 via-violet-500 to-cyan-500"></div>
+          <span class="font-semibold">HackMate</span>
+        </div>
+        <p class="mt-2 text-slate-400">Find teammates and teams for hackathons with skill-based matching.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold text-slate-200">Links</h4>
+        <ul class="mt-2 space-y-1">
+          <li><a href="index.html#home" class="hover:text-white">Home</a></li>
+          <li><a href="index.html#search" class="hover:text-white">Profiles</a></li>
+          <li><a href="index.html#about" class="hover:text-white">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-slate-200">Socials</h4>
+        <div class="mt-2 flex items-center gap-3">
+          <a href="#" aria-label="GitHub" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">GitHub</a>
+          <a href="#" aria-label="Twitter" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">Twitter</a>
+          <a href="#" aria-label="LinkedIn" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-xs text-slate-500 pb-8">© <span id="year"></span> HackMate. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+
+      const previewBtn = document.getElementById('previewBtn');
+      const form = document.getElementById('createForm');
+      const preview = document.getElementById('preview');
+
+      function updatePreview() {
+        const name = document.getElementById('fullName').value.trim() || '—';
+        const email = document.getElementById('email').value.trim();
+        const org = document.getElementById('org').value.trim();
+        const loc = document.getElementById('location').value.trim();
+        const bio = document.getElementById('bio').value.trim() || '—';
+        const skillsRaw = document.getElementById('skills').value.trim();
+
+        document.getElementById('pName').textContent = name;
+        document.getElementById('pMeta').textContent = [org, loc].filter(Boolean).join(' • ') || '—';
+        document.getElementById('pBio').textContent = bio;
+
+        const skillsWrap = document.getElementById('pSkills');
+        skillsWrap.innerHTML = '';
+        if (skillsRaw) {
+          skillsRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
+            const span = document.createElement('span');
+            span.className = 'badge';
+            span.textContent = s;
+            skillsWrap.appendChild(span);
+          });
+        }
+      }
+
+      previewBtn.addEventListener('click', () => {
+        updatePreview();
+        preview.classList.remove('hidden');
+      });
+
+      form.addEventListener('submit', async () => {
+        updatePreview();
+        const btn = document.getElementById('saveBtn');
+        const err = document.getElementById('saveError');
+        err.classList.add('hidden');
+        btn.disabled = true;
+        btn.textContent = 'Creating…';
+        const API_BASE = window.API_BASE || 'http://localhost:5000';
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const bio = document.getElementById('bio').value.trim();
+        const skillsRaw = document.getElementById('skills').value.trim();
+        const skills = skillsRaw ? skillsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, skills, bio })
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(()=>({}));
+            throw new Error(data.message || res.statusText);
+          }
+          const data = await res.json();
+          try {
+            localStorage.setItem('hm_token', data.token);
+            localStorage.setItem('hm_user', JSON.stringify(data.user));
+          } catch {}
+          btn.textContent = 'Account created! Redirecting…';
+          setTimeout(() => { window.location.href = 'index.html#home'; }, 700);
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
+          err.textContent = e.message || 'Failed to create account';
+          err.classList.remove('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

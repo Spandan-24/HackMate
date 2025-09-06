@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HackMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-48 -left-40 h-96 w-96 rounded-full bg-fuchsia-500/20 blur-3xl"></div>
+    <div class="absolute -bottom-48 -right-40 h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/40">
+  <div class="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
+      <a href="#home" class="flex items-center gap-3">
+        <svg width="36" height="36" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" class="rounded-xl shadow-[0_0_40px_-10px_rgba(168,85,247,.7)]">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#a855f7"/>
+              <stop offset="60%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g)"/>
+          <text x="50%" y="54%" text-anchor="middle" font-size="28" font-weight="800" fill="#0b1020" font-family="Inter, system-ui">HM</text>
+        </svg>
+        <h1 class="text-xl font-extrabold tracking-tight">HackMate</h1>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-slate-300">
+  <a href="#home" class="hover:text-white">Home</a>
+  <a href="#features" class="hover:text-white">Features</a>
+        <a href="#search" class="hover:text-white">Profiles</a>
+        <a href="#search" class="hover:text-white">Search</a>
+        <a href="#about" class="hover:text-white">About</a>
+  <a href="#team-finder" class="hover:text-white">Team Finder</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="login.html" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500">Log in</a>
+        <a href="createprofile.html" id="newProfileBtn" class="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500">Create Profile</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-7xl px-6 py-10">
+    <section id="home" class="mb-12">
+      <div class="text-center">
+  <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight glow-text glow-pulse shine">Find your perfect hackathon match</h2>
+        <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Search teammates or teams based on skills, connect instantly, and collaborate.</p>
+        <div class="mt-6 flex items-center justify-center">
+          <a href="#search" class="rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 sheen px-4 py-2 text-sm font-semibold text-white shadow-[0_0_40px_-12px_rgba(34,211,238,0.6)] hover:opacity-95">Explore Profiles</a>
+        </div>
+      </div>
+
+      <div class="mt-10">
+        <div class="mb-3 flex items-center justify-between">
+          <h3 class="text-lg font-semibold">Suggested for you</h3>
+          <a href="#search" class="text-sm text-cyan-300 hover:underline">See all</a>
+        </div>
+        <div id="suggestionsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <section id="features" class="mt-16 reveal">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <h3 class="text-xl font-bold">Features</h3>
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="card">
+            <div class="card-body flex items-start gap-3">
+              <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 grid place-items-center text-slate-900 text-lg">🎯</div>
+              <div>
+                <h4 class="font-semibold">Find teammates based on skills</h4>
+                <p class="text-sm text-slate-300 mt-1">Search by skills and location to match with the right people fast.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body flex items-start gap-3">
+              <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 grid place-items-center text-slate-900 text-lg">💡</div>
+              <div>
+                <h4 class="font-semibold">Project idea sharing</h4>
+                <p class="text-sm text-slate-300 mt-1">Share ideas, gather interest, and recruit collaborators.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body flex items-start gap-3">
+              <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 grid place-items-center text-slate-900 text-lg">🤝</div>
+              <div>
+                <h4 class="font-semibold">Team collaboration tools</h4>
+                <p class="text-sm text-slate-300 mt-1">Coordinate with built-in chat and organized profiles.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body flex items-start gap-3">
+              <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 grid place-items-center text-slate-900 text-lg">🧑‍🏫</div>
+              <div>
+                <h4 class="font-semibold">Mentor/volunteer connections</h4>
+                <p class="text-sm text-slate-300 mt-1">Connect with mentors and volunteers to unlock momentum.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="team-finder" class="mt-16 reveal">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div class="mb-4 flex items-center justify-between">
+          <h3 class="text-xl font-bold">Team Finder</h3>
+          <span class="text-xs text-slate-400">Share your details; we’ll show you below</span>
+        </div>
+        <form id="teamFinderForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" onsubmit="return false;">
+          <div>
+            <label class="block text-sm mb-1 text-slate-300" for="tfName">Name</label>
+            <input id="tfName" required type="text" placeholder="Your name" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1 text-slate-300" for="tfAvailability">Availability</label>
+            <select id="tfAvailability" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm">
+              <option value="Weeknights">Weeknights</option>
+              <option value="Weekends">Weekends</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm mb-1 text-slate-300" for="tfSkills">Skills / Tech stack</label>
+            <input id="tfSkills" required type="text" placeholder="e.g. React, Node.js, PostgreSQL" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm mb-1 text-slate-300" for="tfInterests">Interests</label>
+            <input id="tfInterests" type="text" placeholder="e.g. AI, fintech, edtech" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm" />
+          </div>
+          <div class="md:col-span-2 flex items-center justify-end gap-3">
+            <button id="tfClear" type="button" class="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white hover:bg-white/10">Clear</button>
+            <button id="tfSubmit" type="submit" class="rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white">Add to list</button>
+          </div>
+        </form>
+        <div class="mt-6">
+          <h4 class="text-sm font-semibold tracking-wide text-slate-300 uppercase">Candidates</h4>
+          <div id="teamFinderList" class="mt-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+          <div id="teamFinderEmpty" class="mt-3 text-sm text-slate-400">No entries yet.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="search" class="hidden mt-2">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+        <div class="mb-4 flex items-center gap-3">
+          <h3 class="text-xl font-bold">Search</h3>
+          <div class="ml-auto flex items-center gap-3">
+            <button id="tabTeammate" class="tab-btn active inline-flex items-center gap-2 border border-white/10">
+              <span>👤</span>
+              <span>Find Teammate</span>
+            </button>
+            <button id="tabTeam" class="tab-btn inline-flex items-center gap-2 border border-white/10">
+              <span>👥</span>
+              <span>Find Team</span>
+            </button>
+            <div class="hidden sm:block">
+              <input id="locationFilter" type="text" placeholder="Filter by location" class="w-56 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/60" />
+            </div>
+            <button id="closeSearchPanel" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 hover:bg-white/10">Close</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <aside class="lg:col-span-1 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+            <h4 class="mb-3 text-sm font-semibold tracking-wide text-slate-300 uppercase">Skills</h4>
+            <div class="space-y-3">
+              <div class="relative space-y-2">
+                <input id="skillSearch" type="text" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/60" placeholder="Search skills" />
+                <div id="selectedSkills" class="flex flex-wrap gap-2"></div>
+              </div>
+              <div id="skillsList" class="max-h-56 overflow-auto rounded-lg border border-white/10 bg-slate-900/40 p-2 text-sm"></div>
+            </div>
+          </aside>
+
+          <section class="lg:col-span-3 space-y-6">
+            <div id="emptyState" class="hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/60 via-slate-900/40 to-slate-900/60 p-10 text-center">
+              <h5 class="text-lg font-semibold">No results yet</h5>
+              <p class="mt-1 text-slate-400">Pick some skills to see matching profiles and teams.</p>
+            </div>
+            <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="mt-16 reveal">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur space-y-8">
+        <header>
+          <h3 class="text-xl font-bold">About Us</h3>
+          <p class="mt-1 text-sm text-slate-400">Team name: <span class="font-semibold text-slate-200">HackMate</span> <span class="text-slate-500">(aka Code Catalyst)</span></p>
+          <p class="mt-2 text-slate-300">HackMate helps participants find teammates and teams for hackathons quickly using skill-based matching and instant chat. Built with care to make collaboration delightful.</p>
+        </header>
+
+        <div id="about-mission" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <article class="card reveal">
+            <div class="card-body">
+              <h4 class="font-semibold">Mission</h4>
+              <p class="mt-2 text-sm text-slate-300">Empower hackers to form the best possible teams in minutes by matching complementary skills and goals.</p>
+            </div>
+          </article>
+          <article class="card reveal" style="--reveal-delay:80ms">
+            <div class="card-body">
+              <h4 class="font-semibold">Vision</h4>
+              <p class="mt-2 text-sm text-slate-300">A world where anyone can quickly find collaborators, mentors, and resources to build impactful projects.</p>
+            </div>
+          </article>
+        </div>
+
+        <div id="about-team" class="space-y-3">
+          <h4 class="text-lg font-bold">Team Members</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+    <article class="card reveal">
+              <div class="card-body">
+                <div class="flex items-start gap-3">
+      <img src="https://i.pravatar.cc/80?u=shayan" alt="Shayan" class="h-12 w-12 rounded-xl object-cover border border-white/10" />
+                  <div>
+                    <h5 class="font-semibold">Shayan</h5>
+                    <p class="text-xs text-slate-400">Team Lead</p>
+                  </div>
+                </div>
+                <p class="mt-3 text-sm text-slate-300">Full‑stack builder. Focus on product, UX polish, and system design. Led feature architecture and UI.</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="badge">React</span>
+                  <span class="badge">Node.js</span>
+                  <span class="badge">Tailwind</span>
+                </div>
+              </div>
+            </article>
+    <article class="card reveal" style="--reveal-delay:80ms">
+              <div class="card-body">
+                <div class="flex items-start gap-3">
+      <img src="https://i.pravatar.cc/80?u=shwetank" alt="Shwetank" class="h-12 w-12 rounded-xl object-cover border border-white/10" />
+                  <div>
+                    <h5 class="font-semibold">Shwetank</h5>
+                    <p class="text-xs text-slate-400">Co‑Lead</p>
+                  </div>
+                </div>
+                <p class="mt-3 text-sm text-slate-300">Backend and data. Worked on matching logic, performance, and reliability.</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="badge">Python</span>
+                  <span class="badge">FastAPI</span>
+                  <span class="badge">PostgreSQL</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div id="about-project" class="space-y-3">
+          <h4 class="text-lg font-bold">Project Details</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <article class="card reveal">
+              <div class="card-body">
+                <h5 class="font-semibold">Problem statement</h5>
+                <p class="mt-2 text-sm text-slate-300">Finding teammates is slow and noisy. Skill fit, availability, and goals are often unclear, delaying progress.</p>
+              </div>
+            </article>
+            <article class="card reveal" style="--reveal-delay:80ms">
+              <div class="card-body">
+                <h5 class="font-semibold">Solution overview</h5>
+                <p class="mt-2 text-sm text-slate-300">A skill‑based matching and lightweight chat to quickly shortlist people or teams, with filters for location and needs.</p>
+              </div>
+            </article>
+          </div>
+          <div class="card reveal" style="--reveal-delay:140ms">
+            <div class="card-body">
+              <h5 class="font-semibold">Tech stack used</h5>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                <span class="badge">HTML</span>
+                <span class="badge">CSS / Tailwind</span>
+                <span class="badge">JavaScript</span>
+                <span class="badge">LocalStorage (demo)</span>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="card reveal">
+              <div class="card-body h-40 grid place-items-center text-slate-400">
+                <span>Screenshot Placeholder</span>
+              </div>
+            </div>
+            <div class="card reveal" style="--reveal-delay:80ms">
+              <div class="card-body h-40 grid place-items-center text-slate-400">
+                <span>Screenshot Placeholder</span>
+              </div>
+            </div>
+            <div class="card reveal" style="--reveal-delay:140ms">
+              <div class="card-body h-40 grid place-items-center text-slate-400">
+                <span>Demo Video Placeholder</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="about-contact" class="space-y-3">
+          <h4 class="text-lg font-bold">Contact Us</h4>
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="mailto:hackmate@example.com" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">Email</a>
+            <a href="#" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">LinkedIn</a>
+            <a href="#" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+  </main>
+
+  <div id="chatModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur"></div>
+    <div class="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 px-5 py-3">
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500"></div>
+          <div>
+            <p id="chatWith" class="text-sm font-semibold">Chat</p>
+            <p id="chatSub" class="text-xs text-slate-400">Connect and discuss</p>
+          </div>
+        </div>
+        <button id="closeChat" class="rounded-md p-2 text-slate-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/60">✕</button>
+      </div>
+      <div id="messages" class="h-80 overflow-auto space-y-3 px-5 py-4 bg-[radial-gradient(1000px_200px_at_70%_-30%,rgba(34,211,238,0.08),transparent)]"></div>
+      <div class="border-t border-white/10 px-5 py-3">
+        <div class="flex items-center gap-2">
+          <input id="messageInput" type="text" placeholder="Write a message..." class="flex-1 rounded-lg border border-white/10 bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500/60" />
+          <label class="cursor-pointer rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 hover:bg-white/10">
+            <input id="attachmentInput" type="file" class="hidden" />
+            Attach
+          </label>
+          <button id="sendBtn" class="rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_40px_-12px_rgba(34,211,238,0.6)] hover:opacity-95">Send</button>
+        </div>
+        <div class="mt-3 flex items-center justify-end gap-2 text-xs">
+          <div id="recruiterActions" class="hidden gap-2">
+            <button id="approveBtn" class="rounded-md bg-emerald-500/20 px-3 py-1.5 font-medium text-emerald-300 hover:bg-emerald-500/30">Approve Teammate</button>
+            <button id="rejectBtn" class="rounded-md bg-rose-500/20 px-3 py-1.5 font-medium text-rose-300 hover:bg-rose-500/30">Reject</button>
+          </div>
+          <div id="applicantActions" class="hidden gap-2">
+            <button id="acceptBtn" class="rounded-md bg-emerald-500/20 px-3 py-1.5 font-medium text-emerald-300 hover:bg-emerald-500/30">Accept Invite</button>
+            <button id="declineBtn" class="rounded-md bg-rose-500/20 px-3 py-1.5 font-medium text-rose-300 hover:bg-rose-500/30">Reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="relative z-10 mt-16 border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+      <div>
+        <div class="flex items-center gap-2">
+          <div class="h-7 w-7 rounded-md bg-gradient-to-br from-fuchsia-500 via-violet-500 to-cyan-500"></div>
+          <span class="font-semibold">HackMate</span>
+        </div>
+        <p class="mt-2 text-slate-400">Find teammates and teams for hackathons with skill-based matching.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold text-slate-200">Links</h4>
+        <ul class="mt-2 space-y-1">
+          <li><a href="#home" class="hover:text-white">Home</a></li>
+          <li><a href="#search" class="hover:text-white">Profiles</a></li>
+          <li><a href="#about" class="hover:text-white">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-slate-200">Socials</h4>
+        <div class="mt-2 flex items-center gap-3">
+          <a href="#" aria-label="GitHub" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">GitHub</a>
+          <a href="#" aria-label="Twitter" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">Twitter</a>
+          <a href="#" aria-label="LinkedIn" class="rounded-md border border-white/10 bg-white/5 px-3 py-2 hover:bg-white/10">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-xs text-slate-500 pb-8">© <span id="year"></span> HackMate. All rights reserved.</div>
+  </footer>
+
+  <script>window.API_BASE = 'http://localhost:4000';</script>
+  <script src="app.js"></script>
+  <script>
+    // Auth-aware header: greet and allow logout if token exists
+    (function(){
+      try {
+        const token = localStorage.getItem('hm_token');
+        const user = JSON.parse(localStorage.getItem('hm_user')||'null');
+        if (!token || !user) return;
+        const header = document.querySelector('header .flex.items-center.justify-between > div.flex.items-center.gap-3');
+        if (!header) return;
+        const loginLink = header.querySelector('a[href="login.html"]');
+        if (loginLink) loginLink.remove();
+        const span = document.createElement('span');
+        span.className = 'text-xs text-slate-300';
+        span.textContent = `Hi, ${user.name || 'User'}`;
+        const btn = document.createElement('button');
+        btn.className = 'rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white hover:bg-white/10';
+        btn.textContent = 'Log out';
+        btn.addEventListener('click', () => { localStorage.removeItem('hm_token'); localStorage.removeItem('hm_user'); location.reload(); });
+        header.prepend(span);
+        header.appendChild(btn);
+      } catch {}
+    })();
+  </script>
+</body>
+</html>

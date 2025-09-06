@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in • HackMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <script>window.API_BASE = 'http://localhost:4000';</script>
+  <style>
+    .bg-grid { background-image: linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px); background-size: 24px 24px; }
+  </style>
+  </head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+  <div class="absolute inset-0 bg-grid"></div>
+  <main class="relative z-10 mx-auto max-w-7xl px-6 py-12">
+    <a href="index.html#home" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">
+      <span class="rounded-md border border-white/10 bg-white/5 px-2 py-1">←</span>
+      Back to home
+    </a>
+    <section class="mx-auto max-w-md mt-8">
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-extrabold">Welcome back</h2>
+        <p class="mt-2 text-slate-400">Log in to HackMate</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <form id="loginForm" class="space-y-4" onsubmit="return false;">
+          <div>
+            <label class="block text-sm mb-1 text-slate-300" for="email">Email</label>
+            <input id="email" type="email" required placeholder="you@example.com" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500/60" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1 text-slate-300" for="password">Password</label>
+            <input id="password" type="password" required placeholder="••••••••" class="w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500/60" />
+          </div>
+          <button id="loginBtn" type="submit" class="w-full rounded-lg bg-gradient-to-br from-fuchsia-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white hover:opacity-95">Log in</button>
+          <p id="loginError" class="hidden text-sm text-rose-300"></p>
+        </form>
+        <p class="mt-4 text-sm text-slate-400">New here? <a href="createprofile.html" class="text-cyan-300 hover:underline">Create an account</a></p>
+      </div>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const API_BASE = window.API_BASE || 'http://localhost:4000';
+      const form = document.getElementById('loginForm');
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('loginError');
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if (!email || !password) return;
+        btn.disabled = true; err.classList.add('hidden'); err.textContent = '';
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/login`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password })
+          });
+          if (!res.ok) { const data = await res.json().catch(()=>({})); throw new Error(data.message || res.statusText); }
+          const data = await res.json();
+          try { localStorage.setItem('hm_token', data.token); localStorage.setItem('hm_user', JSON.stringify(data.user)); } catch {}
+          window.location.href = 'index.html#home';
+        } catch (e) {
+          btn.disabled = false; err.textContent = e.message || 'Login failed'; err.classList.remove('hidden');
+        }
+      });
+    });
+  </script>
+  </body>
+  </html>
